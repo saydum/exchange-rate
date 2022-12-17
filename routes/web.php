@@ -10,4 +10,4 @@ Route::get('/settings', [SettingController::class, 'index'])->name('settings');
 
 Route::get('/create', [SettingController::class, 'create'])->name('setXml');
 
-Route::post('/results', [SettingController::class, 'getSettingResultValute'])->name('getSettingsResult');
+Route::post('/', [SettingController::class, 'getSettingResultValute'])->name('getSettingsResult');

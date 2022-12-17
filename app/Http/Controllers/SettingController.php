@@ -8,6 +8,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class SettingController extends Controller
@@ -53,6 +54,9 @@ class SettingController extends Controller
 
         // Получаем валюты по заданным кодам из массива
         $valutes = Valute::whereIn('char_code', $arrayCharCodeFromForm)->get();
+
+        // Убираем дубликаты
+        $valutes = $valutes->unique('char_code');
 
         return view('pages.index', ['valutes' => $valutes]);
     }

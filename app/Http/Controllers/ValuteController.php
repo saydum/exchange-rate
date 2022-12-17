@@ -7,6 +7,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ValuteController extends Controller
@@ -18,7 +19,10 @@ class ValuteController extends Controller
      */
     public function index(): Application| Factory| View| Response | RedirectResponse
     {
+
         $valutes = Valute::all();
+
+        $valutes = $valutes->unique('char_code');
 
         if ($valutes->isEmpty()) {
             return redirect()->route('setXml');
