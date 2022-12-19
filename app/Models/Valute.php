@@ -16,7 +16,6 @@ class Valute extends Model
         'char_code',
         'valute',
         'nominal',
-        'date_time',
     ];
 
 }

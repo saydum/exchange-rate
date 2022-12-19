@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('char_code');
             $table->string('valute');
             $table->string('nominal');
-            $table->string('date_time');
             $table->timestamps();
         });
     }

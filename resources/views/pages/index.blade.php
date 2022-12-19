@@ -21,6 +21,13 @@
                                     {{ $val->nominal }}
                             </b>
                         </p>
+                        <hr>
+                        <p>
+                            Дата: <code>{{ date('d.m.Y', strtotime($val->created_at)) }}</code>
+                        </p>
+                        <p>
+                            Время: <code>{{ date('H:i:s', strtotime($val->created_at)) }}</code>
+                        </p>
                     </div>
                 </div>
             </div>

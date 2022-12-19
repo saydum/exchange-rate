@@ -8,37 +8,13 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class SettingController extends Controller
 {
-    public function __construct()
-    {
-        if (empty(Setting::find(1)->get()->id)) {
-            Setting::create(['id' => 1]);
-        }
-    }
-
     public function index()
     {
-        $dateTime = null;
-        $minutes = 0;
-        $charCodes = [];
-
-        $settings = Setting::find(1)->get();
-
-        foreach ($settings as $s) {
-            $dateTime = $s->dateTIme;
-            $minutes = $s->minutes;
-            $charCodes = explode(' ', $s->charCodes);
-        }
-
-        return view('pages.settings', [
-            'dateTime' => $dateTime,
-            'minutes' => $minutes,
-            'charCodes' => $charCodes,
-        ]);
+        return view('pages.settings');
     }
 
     /**
@@ -55,8 +31,8 @@ class SettingController extends Controller
         // Получаем валюты по заданным кодам из массива
         $valutes = Valute::whereIn('char_code', $arrayCharCodeFromForm)->get();
 
-        // Убираем дубликаты
-        $valutes = $valutes->unique('char_code');
+        // Убираем дубликаты и сортируем по дате
+        $valutes = $valutes->sortByDesc('created_at')->unique('char_code');
 
         return view('pages.index', ['valutes' => $valutes]);
     }
@@ -69,22 +45,11 @@ class SettingController extends Controller
      */
     public function create(): RedirectResponse
     {
-
-        // Получем время дату запуска скрипта и сохраняем в БД
-        if (empty(Setting::find(1))) {
-            Setting::create(['id' => 1]);
-        }
-        $setting  = Setting::find(1);
-        $setting->dateTime = date('Y-m-d H:i:s');
-
         // Получаем данные из XML с помошью встроенной функции php
         $xml = simplexml_load_file(env('URL_XML'));
 
         // Получаем только данные валют и преобразовываем из в массив
         $valutes = array($xml->Valute);
-
-        // Получаем дату
-        $date = $xml['Date'];
 
         // Перебираем массив и сохранаяем в БД
         foreach($valutes as $valute){
@@ -94,7 +59,6 @@ class SettingController extends Controller
                     'char_code' => $val->CharCode,
                     'valute' => $val->Value,
                     'nominal' => $val->Nominal,
-                    'date_time' => $date
                 ]);
             }
         }
